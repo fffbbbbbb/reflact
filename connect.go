@@ -8,7 +8,8 @@ import (
 )
 
 type Engine struct {
-	db *sql.DB
+	db       *sql.DB
+	nameFunc func(a string) string
 }
 
 func Open(dns string) (*Engine, error) {
@@ -16,7 +17,7 @@ func Open(dns string) (*Engine, error) {
 	if err != nil {
 		return nil, err
 	}
-	engine := &Engine{db}
+	engine := &Engine{db, nameFunc}
 	db.SetConnMaxLifetime(time.Minute * 3)
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(10)
@@ -24,4 +25,9 @@ func Open(dns string) (*Engine, error) {
 		return nil, err
 	}
 	return engine, nil
+}
+
+//修改命名方式
+func (e *Engine) ChangeNameFunc(newFunc func(a string) string) {
+	e.nameFunc = newFunc
 }

@@ -20,14 +20,19 @@ func init() {
 
 var testDB *Engine
 
-type Student struct{}
+type StudentTest struct{}
 
-func (s Student) TableName() string {
-	return "student_modify"
-}
+// func (s Student) TableName() string {
+// 	return "student"
+// }
 func TestSyncTable(t *testing.T) {
-	err := testDB.SyncTable(&Student{})
+	err := testDB.SyncTable(&StudentTest{})
 	if err != nil {
 		t.Error(err)
 	}
+}
+
+func TestNameFunc(t *testing.T) {
+	str := "StudentTeacher"
+	t.Log(nameFunc(str))
 }
