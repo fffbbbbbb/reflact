@@ -1,2 +1,2 @@
 # reflact
-go orm by reflect maybe
+learn reflect by make a orm
