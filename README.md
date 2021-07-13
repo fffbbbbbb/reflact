@@ -1,2 +1,2 @@
 # reflact
-go orm by reflact maybe
+go orm by reflect maybe
