@@ -31,16 +31,7 @@ func (e *Engine) syncTable(opt interface{}, nameFunc func(a string) string) erro
 	if modelType.Kind() != reflect.Struct {
 		return errinfo.KindNoSruct
 	}
-	tableName := ""
-	m, ok := modelType.MethodByName("TableName")
-	if ok {
-		ans := m.Func.Call([]reflect.Value{v.Elem()})
-		if ans[0].Kind() == reflect.String {
-			tableName = ans[0].String()
-		}
-	} else {
-		tableName = nameFunc(modelType.Name())
-	}
+	tableName := table.GetTableName(v.Elem().Interface(), nameFunc)
 	exist, err := hasTable(db, tableName)
 	if err != nil {
 		return err
@@ -115,7 +106,6 @@ func nameFunc(name string) string {
 	}
 	nowStr := strings.ToLower(string(now))
 	s = append(s, string(nowStr))
-	// fmt.Println(s)
 	return strings.Join(s, "_")
 }
 

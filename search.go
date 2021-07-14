@@ -3,9 +3,42 @@ package main
 import (
 	"log"
 	"reflect"
+	"strings"
+
+	"github.com/fffbbbbbb/reflact/table"
 
 	"github.com/fffbbbbbb/reflact/errinfo"
 )
+
+func (e *Engine) Find(ans interface{}) error {
+	value := reflect.ValueOf(ans)
+	modelType := value.Type()
+	if modelType.Kind() != reflect.Ptr {
+		return errinfo.KindNoSruct
+	}
+
+	modelType = modelType.Elem()
+	if modelType.Kind() != reflect.Slice {
+		return errinfo.KindNoSlice
+	}
+	tableName := table.GetTableName(reflect.New(modelType.Elem()).Elem().Interface(), e.nameFunc)
+	filter := e.where
+	selectStr := ""
+	if len(e.column) == 0 {
+		selectStr = "*"
+	} else {
+		selectStr = strings.Join(e.column, ",")
+	}
+	s := "select " + selectStr + " from " + tableName
+	if filter != "" {
+		s += " where " + filter
+	}
+	err := e.SearchSlice(ans, s)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func (e *Engine) SearchSlice(ans interface{}, s string, param ...interface{}) error {
 	value := reflect.ValueOf(ans)

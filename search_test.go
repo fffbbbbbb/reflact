@@ -20,3 +20,12 @@ func TestSearchSlice(t *testing.T) {
 	}
 	fmt.Printf("%+v", te)
 }
+
+func TestFind(t *testing.T) {
+	ans := &[]StudentTest{}
+	err := testDB.Column("ID", "Sex", "Name").Where("ID=2").Find(ans)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(ans)
+}

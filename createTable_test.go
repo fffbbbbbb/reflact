@@ -21,19 +21,28 @@ func init() {
 var testDB *Engine
 
 type StudentTest struct {
-	ID   int
-	Name string
-	Sex  bool
+	ID      int64
+	Book    string
+	Publish string
+	Price   float64
 }
 
 func (s StudentTest) TableName() string {
-	return "student"
+	return "book"
 }
 func TestSyncTable(t *testing.T) {
 	err := testDB.SyncTable(&StudentTest{})
 	if err != nil {
 		t.Error(err)
 	}
+}
+
+func TestFindStudent(t *testing.T) {
+	ans := &[]StudentTest{}
+	if err := testDB.Where("Publish='renmin'").Find(ans); err != nil {
+		t.Error(err)
+	}
+	fmt.Println(ans)
 }
 
 func TestNameFunc(t *testing.T) {

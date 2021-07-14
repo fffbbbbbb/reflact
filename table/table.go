@@ -39,3 +39,23 @@ func (t *Table) MakeCreateSQL() string {
 	}
 	return fmt.Sprintf(templ, t.TableName, strings.Join(fieldSilce, ",\n"))
 }
+
+//传入参数为Struct
+func GetTableName(opt interface{}, nameFunc func(a string) string) string {
+	v := reflect.ValueOf(opt)
+	modelType := v.Type()
+	if modelType.Kind() != reflect.Struct {
+		return ""
+	}
+	tableName := ""
+	m, ok := modelType.MethodByName("TableName")
+	if ok {
+		ans := m.Func.Call([]reflect.Value{v})
+		if ans[0].Kind() == reflect.String {
+			tableName = ans[0].String()
+		}
+	} else if nameFunc != nil {
+		tableName = nameFunc(modelType.Name())
+	}
+	return tableName
+}

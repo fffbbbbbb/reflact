@@ -18,6 +18,8 @@ type Engine struct {
 	nameFunc  func(a string) string
 	DBVersion string
 	hasJson   bool
+	column    []string
+	where     string
 }
 
 func Open(dns string) (*Engine, error) {
