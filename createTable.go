@@ -29,7 +29,7 @@ func (e *Engine) syncTable(opt interface{}, nameFunc func(a string) string) erro
 		modelType = modelType.Elem()
 	}
 	if modelType.Kind() != reflect.Struct {
-		return errinfo.KindNoSruct
+		return errinfo.KindNoStruct
 	}
 	tableName := table.GetTableName(v.Elem().Interface(), nameFunc)
 	exist, err := hasTable(db, tableName)
@@ -71,7 +71,7 @@ func TableDescription(opt interface{}, tableName string, hasJson bool) (*table.T
 		modelType = modelType.Elem()
 	}
 	if modelType.Kind() != reflect.Struct {
-		return nil, errinfo.KindNoSruct
+		return nil, errinfo.KindNoStruct
 	}
 	t := &table.Table{
 		TableName: tableName,

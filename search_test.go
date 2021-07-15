@@ -29,3 +29,12 @@ func TestFind(t *testing.T) {
 	}
 	fmt.Println(ans)
 }
+
+func TestFirst(t *testing.T) {
+	ans := &StudentTest{}
+	err := testDB.Column("ID", "Sex", "Name").Where("ID=8").First(ans)
+	if err != nil {
+		t.Error(err)
+	}
+	fmt.Println(ans)
+}

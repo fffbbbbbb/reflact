@@ -21,14 +21,13 @@ func init() {
 var testDB *Engine
 
 type StudentTest struct {
-	ID      int64
-	Book    string
-	Publish string
-	Price   float64
+	ID   int64
+	Name string
+	Sex  bool
 }
 
 func (s StudentTest) TableName() string {
-	return "book"
+	return "student"
 }
 func TestSyncTable(t *testing.T) {
 	err := testDB.SyncTable(&StudentTest{})
