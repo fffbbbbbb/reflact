@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -10,7 +11,7 @@ import (
 
 	"github.com/fffbbbbbb/reflact/table"
 
-	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql"
 )
 
 type Engine struct {
@@ -23,7 +24,26 @@ type Engine struct {
 }
 
 func Open(dns string) (*Engine, error) {
-	db, err := sql.Open("mysql", dns)
+	cfg, err := mysql.ParseDSN(dns)
+	if err != nil {
+		panic(err)
+	}
+	dbname := cfg.DBName
+
+	fmt.Println(dbname)
+	cfg.DBName = ""
+
+	db, err := sql.Open("mysql", cfg.FormatDSN())
+	if err != nil {
+		return nil, err
+	}
+	_, err = db.Exec("create database if not exists " + dbname)
+	if err != nil {
+		panic(err)
+	}
+	db.Close()
+
+	db, err = sql.Open("mysql", dns)
 	if err != nil {
 		return nil, err
 	}
